@@ -3,7 +3,9 @@
 An enterprise-ready Text-to-SQL AI Agent featuring dynamic database schema inspection, query validation guardrails, and a **Human-in-the-Loop (HITL)** governance workflow to safely translate natural language queries into executable SQL commands.
 
 ---
-
+[![Live App Demo](https://img.shields.io/badge/🚀_Live_Demo-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://enterprise-sql-ai-copilot-with-human-in-the-loop-governance.streamlit.app/)
+[![LinkedIn Post](https://img.shields.io/badge/🔗_LinkedIn-Post_&_Demo-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/posts/giridhar-nandyala-5758662b2_agenticai-langgraph-genai-ugcPost-7500058210687610882-HjRs/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEs70akBeCLfAOvC2nnAC0kHj16JNBTXqJM)
+---
 ## 🌟 Key Features
 
 - 🧠 **Natural Language to SQL**: Converts complex business questions into optimized SQL queries using LLM tool-calling.
