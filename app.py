@@ -1,31 +1,52 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+import streamlit as st
+import pandas as pd
 from agents import run_copilot_workflow
 from database import execute_query
 
-app = FastAPI(title="Enterprise AI Data Copilot API")
+st.set_page_config(page_title="Enterprise AI Data Copilot", layout="wide")
 
-class QueryRequest(BaseModel):
-    prompt: str
+st.title("🛡️ Enterprise SQL AI Copilot with Governance")
+st.write("Ask business questions in natural language and generate/execute safe SQL queries.")
 
-class ApprovalRequest(BaseModel):
-    sql_query: str
+# Sidebar for controls & status
+with st.sidebar:
+    st.header("⚙️ Copilot Controls")
+    st.success("Database Status: Connected")
 
-@app.get("/")
-def root():
-    return {"status": "Enterprise AI Copilot API is running smoothly!"}
+# User input prompt
+prompt = st.text_input("Enter your data question or command:", placeholder="e.g. Show total sales by customer region")
 
-@app.post("/query")
-def process_query(req: QueryRequest):
-    try:
-        response = run_copilot_workflow(req.prompt)
-        return response
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/approve-execution")
-def approve_query(req: ApprovalRequest):
-    df, err = execute_query(req.sql_query)
-    if err:
-        raise HTTPException(status_code=400, detail=err)
-    return {"status": "Success", "data": df.to_dict(orient="records")}
+if st.button("Run Query"):
+    if prompt:
+        with st.spinner("Processing query via Agentic Workflow..."):
+            try:
+                # FastAPIం
+                response = run_copilot_workflow(prompt)
+                
+                
+                if isinstance(response, dict):
+                    if response.get("status") == "approval_required":
+                        st.warning("⚠️ **Human-in-the-Loop Governance Triggered!**")
+                        st.info(f"Generated Query requires Approval: `{response.get('sql_query')}`")
+                        
+                        # Human Approval 
+                        if st.button("Approve & Execute"):
+                            df, err = execute_query(response.get('sql_query'))
+                            if err:
+                                st.error(f"Execution Error: {err}")
+                            else:
+                                st.success("Query Executed Successfully!")
+                                st.dataframe(df)
+                    else:
+                        st.success("Query Executed Successfully!")
+                        if "data" in response:
+                            st.dataframe(pd.DataFrame(response["data"]))
+                        else:
+                            st.write(response)
+                else:
+                    st.write(response)
+                    
+            except Exception as e:
+                st.error(f"Error processing query: {str(e)}")
+    else:
+                st.warning("Please enter a valid query prompt.")
