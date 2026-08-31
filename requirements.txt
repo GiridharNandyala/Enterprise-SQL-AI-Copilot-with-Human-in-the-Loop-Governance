@@ -13,3 +13,4 @@ langchain-google-genai
 langgraph
 python-dotenv
 requests
+plotly
