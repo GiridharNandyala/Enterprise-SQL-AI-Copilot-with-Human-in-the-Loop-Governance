@@ -1,9 +1,8 @@
 import streamlit as st
-import requests
 import pandas as pd
 import plotly.express as px
-
-API_URL = "http://127.0.0.1:8000"
+from agents import run_copilot_workflow
+from database import execute_query
 
 st.set_page_config(
     page_title="Enterprise AI Data Copilot",
@@ -41,31 +40,33 @@ user_query = st.text_input(
     placeholder="e.g., What are our top-selling software products?"
 )
 
-# Function to execute API Request
+# Function to execute Agent Workflow directly (No FastAPI needed)
 def run_copilot(query):
     with st.spinner("Multi-Agent Graph is processing your request..."):
         try:
-            res = requests.post(f"{API_URL}/query", json={"prompt": query})
-            data = res.json()
+            # Direct python function call instead of requests.post
+            data = run_copilot_workflow(query)
 
-            st.subheader("📝 Generated SQL Query")
-            st.code(data.get("sql_query"), language="sql")
+            if isinstance(data, dict) and data.get("sql_query"):
+                st.subheader("📝 Generated SQL Query")
+                st.code(data.get("sql_query"), language="sql")
 
-            # Governance Alert
-            if data.get("requires_approval"):
+            # Governance Alert / Approval Required
+            if isinstance(data, dict) and (data.get("requires_approval") or data.get("status") == "approval_required"):
                 st.error("⚠️ Governance Alert: Destructive SQL command detected!")
                 st.warning("This operation requires Human-in-the-Loop authorization before execution.")
                 
                 if st.button("Approve & Execute Command"):
-                    approve_res = requests.post(
-                        f"{API_URL}/approve-execution", 
-                        json={"sql_query": data.get("sql_query")}
-                    )
-                    st.success("Action Executed Successfully!")
-                    st.json(approve_res.json())
+                    sql_to_run = data.get("sql_query")
+                    df_res, err = execute_query(sql_to_run)
+                    if err:
+                        st.error(f"Execution Error: {err}")
+                    else:
+                        st.success("Action Executed Successfully!")
+                        st.dataframe(df_res, use_container_width=True)
 
             # Output Data & Plots
-            elif data.get("results"):
+            elif isinstance(data, dict) and "results" in data:
                 st.subheader("📊 Results Data")
                 df = pd.DataFrame(data["results"])
                 st.dataframe(df, use_container_width=True)
@@ -78,18 +79,22 @@ def run_copilot(query):
                     fig = px.bar(df, x=string_cols[0], y=numeric_cols[0], title=f"{numeric_cols[0]} by {string_cols[0]}")
                     st.plotly_chart(fig, use_container_width=True)
 
-            elif data.get("error"):
+            elif isinstance(data, dict) and "data" in data:
+                st.subheader("📊 Results Data")
+                df = pd.DataFrame(data["data"])
+                st.dataframe(df, use_container_width=True)
+
+            elif isinstance(data, dict) and data.get("error"):
                 st.error(f"Execution Error: {data['error']}")
             else:
-                st.info("No data returned for this query.")
+                st.write(data)
 
         except Exception as e:
-            st.error(f"Failed to connect to FastAPI Backend: {e}")
+            st.error(f"Execution Error: {e}")
 
 # Run when 'Run Query' is clicked OR if a sample button was pressed
 if st.button("Run Query") or st.session_state.active_prompt:
     query_to_send = user_query if user_query else st.session_state.active_prompt
     if query_to_send:
         run_copilot(query_to_send)
-        # Clear active prompt so it doesn't loop endlessly
         st.session_state.active_prompt = ""
