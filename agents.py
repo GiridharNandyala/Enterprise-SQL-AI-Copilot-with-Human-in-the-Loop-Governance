@@ -20,6 +20,7 @@ Tables in enterprise.db:
 1. customers (customer_id, name, region, join_date)
 2. products (product_id, product_name, category, price)
 3. orders (order_id, customer_id, product_id, order_date, amount, status)
+4. employees (employee_id, name, department, role, salary)
 """
 
 class AgentState(TypedDict):

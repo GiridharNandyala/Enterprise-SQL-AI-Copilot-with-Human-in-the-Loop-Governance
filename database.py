@@ -41,10 +41,22 @@ def init_db():
     )
     """)
 
-    # Sample Data Insertions
+    # Employees Table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS employees (
+        employee_id INTEGER PRIMARY KEY,
+        name TEXT,
+        department TEXT,
+        role TEXT,
+        salary REAL
+    )
+    """)
+
+    # Clear existing sample data
     cursor.execute("DELETE FROM customers")
     cursor.execute("DELETE FROM products")
     cursor.execute("DELETE FROM orders")
+    cursor.execute("DELETE FROM employees")
 
     customers_data = [
         (101, 'Aarav Sharma', 'South', '2023-01-15'),
@@ -79,9 +91,18 @@ def init_db():
     ]
     cursor.executemany("INSERT INTO orders VALUES (?,?,?,?,?,?)", orders_data)
 
+    employees_data = [
+        (301, 'Rahul Dravid', 'IT', 'Software Engineer', 85000.0),
+        (302, 'Sneha Kapoor', 'IT', 'Data Scientist', 92000.0),
+        (303, 'Amitabh Joshi', 'HR', 'HR Manager', 70000.0),
+        (304, 'Pooja Hegde', 'IT', 'Cloud Architect', 110000.0),
+        (305, 'Suresh Raina', 'Sales', 'Sales Executive', 60000.0)
+    ]
+    cursor.executemany("INSERT INTO employees VALUES (?,?,?,?,?)", employees_data)
+
     conn.commit()
     conn.close()
-    print("Database enterprise.db initialized with sample data successfully.")
+    print("Database enterprise.db initialized with sample data (including employees) successfully.")
 
 def execute_query(sql_query: str):
     conn = sqlite3.connect(DB_NAME)
