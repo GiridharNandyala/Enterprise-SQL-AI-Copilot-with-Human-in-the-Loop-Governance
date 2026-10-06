@@ -8,10 +8,13 @@ from database import execute_query
 
 load_dotenv()
 
-# 1. Correct Model Initialization
+# Get API Key from either GEMINI_API_KEY or GOOGLE_API_KEY
+api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+
+# 1. Correct Model Initialization with valid model name
 llm = ChatGoogleGenerativeAI(
-    model="gemini-3.5-flash",
-    google_api_key=os.getenv("GOOGLE_API_KEY"),
+    model="gemini-1.5-flash",
+    google_api_key=api_key,
     temperature=0
 )
 
