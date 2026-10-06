@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from typing import Optional
 from agents import run_copilot_workflow
 from database import init_db
 
@@ -11,6 +12,7 @@ def startup_event():
 
 class QueryRequest(BaseModel):
     query: str
+    user_role: Optional[str] = "admin"  # Swagger Requests reject అవ్వకుండా user_role యాడ్ చేశాం
 
 @app.post("/api/v1/query")
 def process_query(request: QueryRequest):

@@ -14,22 +14,19 @@ with st.sidebar:
     st.success("Database Status: Connected")
 
 # User input prompt
-prompt = st.text_input("Enter your data question or command:", placeholder="e.g. Show total sales by customer region")
+prompt = st.text_input("Enter your data question or command:", placeholder="e.g. Show all employees in IT department")
 
 if st.button("Run Query"):
     if prompt:
         with st.spinner("Processing query via Agentic Workflow..."):
             try:
-                # FastAPI 
                 response = run_copilot_workflow(prompt)
                 
-               
                 if isinstance(response, dict):
-                    if response.get("status") == "approval_required":
+                    if response.get("requires_approval"):
                         st.warning("⚠️ **Human-in-the-Loop Governance Triggered!**")
                         st.info(f"Generated Query requires Approval: `{response.get('sql_query')}`")
                         
-                        # Human Approval 
                         if st.button("Approve & Execute"):
                             df, err = execute_query(response.get('sql_query'))
                             if err:
@@ -39,14 +36,20 @@ if st.button("Run Query"):
                                 st.dataframe(df)
                     else:
                         st.success("Query Executed Successfully!")
-                        if "data" in response:
-                            st.dataframe(pd.DataFrame(response["data"]))
+                        sql_generated = response.get("sql_query", "")
+                        st.code(sql_generated, language="sql")
+                        
+                        results = response.get("results")
+                        if results:
+                            st.dataframe(pd.DataFrame(results))
+                        elif response.get("error"):
+                            st.error(f"Error: {response.get('error')}")
                         else:
-                            st.write(response)
+                            st.write("No data found or empty result.")
                 else:
                     st.write(response)
                     
             except Exception as e:
                 st.error(f"Error processing query: {str(e)}")
     else:
-                st.warning("Please enter a valid query prompt.")
+        st.warning("Please enter a valid query prompt.")
