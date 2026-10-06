@@ -13,7 +13,7 @@ api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
 
 # 1. Correct Model Initialization with valid model name
 llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",
+    model="gemini-3.6-flash",
     google_api_key=api_key,
     temperature=0
 )
