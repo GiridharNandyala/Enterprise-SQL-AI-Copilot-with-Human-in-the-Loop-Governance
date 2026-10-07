@@ -5,8 +5,8 @@ An enterprise-grade Agentic SQL AI Copilot powered by **LangGraph**, **FastAPI**
 [![Live API Demo](https://img.shields.io/badge/Render-Live_API_Docs-00C7B7?style=for-the-badge&logo=render&logoColor=white)](https://enterprise-sql-ai-copilot-with-human-in.onrender.com/docs)
 
 ### 🌐 Quick Links & Demo, Click here 
-[![Live App - Streamlit](https://giridhar-rag-pdf-chat.streamlit.app/)
-[![LinkedIn Post](https://www.linkedin.com/posts/giridhar-nandyala-5758662b2_generativeai-rag-machinelearning-ugcPost-7485951006032285696-w0Kj/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEs70akBeCLfAOvC2nnAC0kHj16JNBTXqJM)
+[![Live App - Streamlit](https://giridhar-rag-pdf-chat.streamlit.app/)]
+[![LinkedIn Post](https://www.linkedin.com/posts/giridhar-nandyala-5758662b2_generativeai-rag-machinelearning-ugcPost-7485951006032285696-w0Kj/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEs70akBeCLfAOvC2nnAC0kHj16JNBTXqJM)]
 
 ---
 
