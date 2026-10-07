@@ -3,7 +3,7 @@
 An enterprise-grade Agentic SQL AI Copilot powered by **LangGraph**, **FastAPI**, **Streamlit**, and **Google Gemini 1.5 Flash**. This system converts natural language business queries into executed SQLite queries while enforcing security guardrails and human approval mechanisms for high-risk operations.
 
 [![Live API Demo](https://img.shields.io/badge/Render-Live_API_Docs-00C7B7?style=for-the-badge&logo=render&logoColor=white)](https://enterprise-sql-ai-copilot-with-human-in.onrender.com/docs)
-[![Streamlit App](https://img.shields.io/badge/Streamlit-RAG_PDF_Chat-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://giridhar-rag-pdf-chat.streamlit.app/)
+[![Streamlit App](https://enterprise-sql-ai-copilot-with-human-in-the-loop-governance.streamlit.app/)
 [![LinkedIn Post](https://img.shields.io/badge/LinkedIn-Project_Post-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/posts/giridhar-nandyala-5758662b2_generativeai-rag-machinelearning-ugcPost-7485951006032285696-w0Kj/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEs70akBeCLfAOvC2nnAC0kHj16JNBTXqJM)
 
 ---
