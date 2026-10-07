@@ -31,7 +31,8 @@ An enterprise-grade Agentic SQL AI Copilot powered by **LangGraph**, **FastAPI**
 ## 📊 LangSmith Observability & Tracing
 The application integrates **LangSmith** for full-stack observability, agent execution tracing, LLM prompt evaluation, and error tracking.
 
-![LangSmith Tracing Dashboard](https://raw.githubusercontent.com/GiridharNandyala/Enterprise-SQL-AI-Copilot-with-Human-in-the-Loop-Governance/main/langsmith_tracing.png)
+![LangSmith Tracing Dashboard](<img width="1530" height="776" alt="langsmith_tracing" src="https://github.com/user-attachments/assets/98bd3883-a1ea-4e69-a1cd-7523c7a0e82a" />
+)
 
 ---
 
