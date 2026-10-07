@@ -1,55 +1,129 @@
-import streamlit as st
+import sqlite3
 import pandas as pd
-from agents import run_copilot_workflow
-from database import execute_query
 
-st.set_page_config(page_title="Enterprise AI Data Copilot", layout="wide")
+DB_NAME = "enterprise.db"
 
-st.title("🛡️ Enterprise SQL AI Copilot with Governance")
-st.write("Ask business questions in natural language and generate/execute safe SQL queries.")
+def init_db():
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
 
-# Sidebar for controls & status
-with st.sidebar:
-    st.header("⚙️ Copilot Controls")
-    st.success("Database Status: Connected")
+    # Customers Table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS customers (
+        customer_id INTEGER PRIMARY KEY,
+        name TEXT,
+        region TEXT,
+        join_date DATE
+    )
+    """)
 
-# User input prompt
-prompt = st.text_input("Enter your data question or command:", placeholder="e.g. Show all employees in IT department")
+    # Products Table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS products (
+        product_id INTEGER PRIMARY KEY,
+        product_name TEXT,
+        category TEXT,
+        price REAL
+    )
+    """)
 
-if st.button("Run Query"):
-    if prompt:
-        with st.spinner("Processing query via Agentic Workflow..."):
-            try:
-                response = run_copilot_workflow(prompt)
-                
-                if isinstance(response, dict):
-                    if response.get("requires_approval"):
-                        st.warning("⚠️ **Human-in-the-Loop Governance Triggered!**")
-                        st.info(f"Generated Query requires Approval: `{response.get('sql_query')}`")
-                        
-                        if st.button("Approve & Execute"):
-                            df, err = execute_query(response.get('sql_query'))
-                            if err:
-                                st.error(f"Execution Error: {err}")
-                            else:
-                                st.success("Query Executed Successfully!")
-                                st.dataframe(df)
-                    else:
-                        st.success("Query Executed Successfully!")
-                        sql_generated = response.get("sql_query", "")
-                        st.code(sql_generated, language="sql")
-                        
-                        results = response.get("results")
-                        if results:
-                            st.dataframe(pd.DataFrame(results))
-                        elif response.get("error"):
-                            st.error(f"Error: {response.get('error')}")
-                        else:
-                            st.write("No data found or empty result.")
-                else:
-                    st.write(response)
-                    
-            except Exception as e:
-                st.error(f"Error processing query: {str(e)}")
-    else:
-        st.warning("Please enter a valid query prompt.")
+    # Orders Table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS orders (
+        order_id INTEGER PRIMARY KEY,
+        customer_id INTEGER,
+        product_id INTEGER,
+        order_date DATE,
+        amount REAL,
+        status TEXT,
+        FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
+        FOREIGN KEY (product_id) REFERENCES products(product_id)
+    )
+    """)
+
+    # Employees Table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS employees (
+        employee_id INTEGER PRIMARY KEY,
+        name TEXT,
+        department TEXT,
+        role TEXT,
+        salary REAL
+    )
+    """)
+
+    # Check if data already exists
+    cursor.execute("SELECT COUNT(*) FROM customers")
+    count = cursor.fetchone()[0]
+
+    if count == 0:
+        customers_data = [
+            (101, 'Aarav Sharma', 'South', '2023-01-15'),
+            (102, 'Priya Reddy', 'South', '2023-02-20'),
+            (103, 'Vikram Verma', 'North', '2023-03-10'),
+            (104, 'Ananya Patel', 'West', '2023-04-05'),
+            (105, 'Rohan Gupta', 'East', '2023-05-12'),
+            (106, 'Sai Kumar', 'South', '2023-06-18'),
+            (107, 'Kavya Singh', 'North', '2023-07-22')
+        ]
+        cursor.executemany("INSERT INTO customers VALUES (?,?,?,?)", customers_data)
+
+        products_data = [
+            (201, 'Enterprise AI Platform', 'Software', 15000.0),
+            (202, 'Cloud Data Analytics Suite', 'Software', 8000.0),
+            (203, 'Hardware Server Rack', 'Hardware', 25000.0),
+            (204, 'Cybersecurity Audit Service', 'Services', 12000.0),
+            (205, 'Database Storage License', 'Software', 5000.0)
+        ]
+        cursor.executemany("INSERT INTO products VALUES (?,?,?,?)", products_data)
+
+        orders_data = [
+            (1, 101, 201, '2024-01-10', 15000.0, 'Completed'),
+            (2, 102, 202, '2024-01-15', 8000.0, 'Completed'),
+            (3, 103, 203, '2024-02-01', 25000.0, 'Pending'),
+            (4, 101, 205, '2024-02-14', 5000.0, 'Completed'),
+            (5, 104, 204, '2024-02-20', 12000.0, 'Cancelled'),
+            (6, 105, 201, '2024-03-05', 15000.0, 'Completed'),
+            (7, 106, 202, '2024-03-12', 8000.0, 'Completed'),
+            (8, 102, 204, '2024-03-22', 12000.0, 'Completed'),
+            (9, 107, 203, '2024-04-01', 25000.0, 'Pending')
+        ]
+        cursor.executemany("INSERT INTO orders VALUES (?,?,?,?,?,?)", orders_data)
+
+        employees_data = [
+            (301, 'Rahul Dravid', 'IT', 'Software Engineer', 85000.0),
+            (302, 'Sneha Kapoor', 'IT', 'Data Scientist', 92000.0),
+            (303, 'Amitabh Joshi', 'HR', 'HR Manager', 70000.0),
+            (304, 'Pooja Hegde', 'IT', 'Cloud Architect', 110000.0),
+            (305, 'Suresh Raina', 'Sales', 'Sales Executive', 60000.0)
+        ]
+        cursor.executemany("INSERT INTO employees VALUES (?,?,?,?,?)", employees_data)
+
+        conn.commit()
+
+    conn.close()
+    print("Database enterprise.db initialized with sample data successfully.")
+
+def execute_query(sql_query: str):
+    # Ensure tables and sample data exist before running query
+    init_db()
+    conn = sqlite3.connect(DB_NAME)
+    try:
+        # Check if it's a SELECT statement or DML statement (DELETE/UPDATE/INSERT)
+        if sql_query.strip().upper().startswith("SELECT"):
+            df = pd.read_sql_query(sql_query, conn)
+            conn.close()
+            return df, None
+        else:
+            cursor = conn.cursor()
+            cursor.execute(sql_query)
+            conn.commit()
+            affected = cursor.rowcount
+            conn.close()
+            return pd.DataFrame([{"Result": f"Query executed successfully. Affected rows: {affected}"}]), None
+    except Exception as e:
+        conn.close()
+        return None, str(e)
+
+if __name__ == "__main__":
+    init_db()
