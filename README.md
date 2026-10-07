@@ -1,20 +1,37 @@
 # 🛡️ Enterprise SQL AI Copilot with Human-in-the-Loop Governance
 
-An enterprise-grade Agentic SQL AI Copilot powered by **LangGraph**, **FastAPI**, **Streamlit**, and **Google Gemini 3.6 Flash**. This system converts natural language business queries into executed SQLite queries while enforcing security guardrails and human approval mechanisms for high-risk operations.
+An enterprise-grade Agentic SQL AI Copilot powered by **LangGraph**, **FastAPI**, **Streamlit**, and **Google Gemini 1.5 Flash**. This system converts natural language business queries into executed SQLite queries while enforcing security guardrails and human approval mechanisms for high-risk operations.
 
 [![Live API Demo](https://img.shields.io/badge/Render-Live_API_Docs-00C7B7?style=for-the-badge&logo=render&logoColor=white)](https://enterprise-sql-ai-copilot-with-human-in.onrender.com/docs)
 [![Streamlit App](https://img.shields.io/badge/Streamlit-RAG_PDF_Chat-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://giridhar-rag-pdf-chat.streamlit.app/)
 [![LinkedIn Post](https://img.shields.io/badge/LinkedIn-Project_Post-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/posts/giridhar-nandyala-5758662b2_generativeai-rag-machinelearning-ugcPost-7485951006032285696-w0Kj/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEs70akBeCLfAOvC2nnAC0kHj16JNBTXqJM)
 
+---
+
+## 🛠️ Tech Stack
+* **LLM Engine**: Google Gemini 1.5 Flash
+* **Agentic Framework**: LangGraph & LangChain
+* **Backend Framework**: FastAPI (Uvicorn)
+* **Frontend**: Streamlit
+* **Observability & Tracing**: LangSmith
+* **Database**: SQLite (`enterprise.db`)
+* **Containerization & Deployment**: Docker, Render Cloud Deployment
 
 ---
 
 ## ✨ Features
-* **Natural Language to SQL**: Translates business questions directly into SQLite queries using Google Gemini 3.6 Flash.
+* **Natural Language to SQL**: Translates business questions directly into SQLite queries using Google Gemini 1.5 Flash.
 * **Human-in-the-Loop Governance**: Flags dangerous data manipulation queries (`DROP`, `DELETE`, `UPDATE`, `INSERT`, `ALTER`, `TRUNCATE`) requiring explicit approval before execution.
 * **Self-Correction & Retry**: Automatic iterative loop up to 3 retries if a generated SQL query encounters execution errors.
 * **Dual Interface**: Exposes a FastAPI production backend (with Swagger UI) and a Streamlit interactive frontend.
 * **Multi-Table Enterprise Schema**: Built-in support for `customers`, `products`, `orders`, and `employees`.
+
+---
+
+## 📊 LangSmith Observability & Tracing
+The application integrates **LangSmith** for full-stack observability, agent execution tracing, LLM prompt evaluation, and error tracking.
+
+![LangSmith Tracing Dashboard](https://raw.githubusercontent.com/GiridharNandyala/Enterprise-SQL-AI-Copilot-with-Human-in-the-Loop-Governance/main/langsmith_tracing.png)
 
 ---
 
