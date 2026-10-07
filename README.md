@@ -9,7 +9,7 @@ An enterprise-grade Agentic SQL AI Copilot powered by **LangGraph**, **FastAPI**
 ---
 
 ## 🛠️ Tech Stack
-* **LLM Engine**: Google Gemini 1.5 Flash
+* **LLM Engine**: Google Gemini 3.6 Flash
 * **Agentic Framework**: LangGraph & LangChain
 * **Backend Framework**: FastAPI (Uvicorn)
 * **Frontend**: Streamlit
@@ -31,8 +31,8 @@ An enterprise-grade Agentic SQL AI Copilot powered by **LangGraph**, **FastAPI**
 ## 📊 LangSmith Observability & Tracing
 The application integrates **LangSmith** for full-stack observability, agent execution tracing, LLM prompt evaluation, and error tracking.
 
-![LangSmith Tracing Dashboard](<img width="1530" height="776" alt="langsmith_tracing" src="https://github.com/user-attachments/assets/98bd3883-a1ea-4e69-a1cd-7523c7a0e82a" />
-)
+<img width="1530" height="776" alt="langsmith_tracing" src="https://github.com/user-attachments/assets/23adcaca-6eaa-4854-8227-4546b5d76295" />
+
 
 ---
 
